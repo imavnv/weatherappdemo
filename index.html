@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="data:,">
+    <title>Weather app</title>
+</head>
+<body>
+    <div class = "card">
+        <div class="search">
+        <input type="text" placeholder="Enter City Name"
+        spellcheck="false">
+        <button><img src="weather-app-img/images/search.png"></button>
+    </div>
+    <div class="error">
+        <p>Invalid City Name</p>
+    </div>
+    <div class="weather">
+        <img src="weather-app-img/images/rain.png" class="weather-icon">
+        <h1 class="temperature">20°C</h1>
+        <h2 class="city">New York</h2>
+        <div class="details">
+            <div class="col">
+                <img src="weather-app-img/images/humidity.png">
+                <div>
+                    <p class="humidity">50%</p>
+                    <p>Humidity</p>
+                </div>
+            </div>
+             <div class="col">
+                <img src="weather-app-img/images/wind.png">
+                <div>
+                    <p class="wind">15 km/h</p>
+                    <p>wind speed</p>
+                </div>
+        </div>
+ </div>
+ </div>
+
+ <script>
+    const apiKey= "33057a51fe2b202ace891eb2413e3f49";
+    const apiURL= "http://api.openweathermap.org/data/2.5/weather?q=";
+    const SearchBox= document.querySelector(".search input");
+    const Searchbtn= document.querySelector(".search button");
+    const Weathericon= document.querySelector(".weather-icon")
+
+    async function checkWeather(city) {
+        // const city= document.querySelector("input").value;
+        const response= await fetch(apiURL + city +`&appid=${apiKey}&units=metric`);
+        if (response.status== 404){
+            document.querySelector(".error").style.display="block";
+            document.querySelector(".weather").style.display="none";
+
+        }
+        else{
+               var data= await response.json() // Have all info on weather
+        // console.log(data)
+        document.querySelector(".city").innerText = data.name;
+        document.querySelector(".temperature").innerText = Math.round(data.main.temp) + "°C";
+        document.querySelector(".humidity").innerText = data.main.humidity + "%";
+        document.querySelector(".wind").innerText = data.wind.speed + " km/h";
+        
+        if(data.weather[0].main == "Clouds") {
+            Weathericon.src= "weather-app-img/clouds.png";
+        }
+        else if(data.weather[0].main == "Clear") {
+            Weathericon.src= "weather-app-img/clear.png";
+        }
+        else if(data.weather[0].main == "Humidity") {
+            Weathericon.src= "weather-app-img/humidity.png";
+        }
+        else if(data.weather[0].main == "Drizzle") {
+            Weathericon.src= "weather-app-img/drizzle.png";
+        }
+        else if(data.weather[0].main == "Rain") {
+            Weathericon.src= "weather-app-img/rain.png"
+        }
+        else if(data.weather[0].main == "Mist") {
+            Weathericon.src= "weather-app-img/mist.png"
+        }
+        else if(data.weather[0].main == "Snow") {
+            Weathericon.src= "weather-app-img/snow.png"
+        }
+        else if(data.weather[0].main == "Wind") {
+            Weathericon.src= "weather-app-img/wind.png"
+        }
+
+
+        document.querySelector(".weather").style.display = "block";
+        document.querySelector(".error").style.display="none";
+
+        
+             
+    
+        }
+    }
+
+        
+     
+    Searchbtn.addEventListener("click",()=>{
+        checkWeather(SearchBox.value);
+    })
+  
+ </script>
+    
+</body>
+</html>
